@@ -5,12 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EnderZiomal5's Static QR Code Generator</title>
+
   <!-- Load qrcode-generator from reliable CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- Load Inter font for clean modern typography -->
+
+  <!-- Load Lexend font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
 
   <style>
     /* Host page demo wrapper (optional when embedding just .qr-widget-root) */
@@ -23,6 +25,7 @@
       justify-content: center;
       background-color: #0b0514;
       box-sizing: border-box;
+      font-family: 'Lexend', sans-serif;
     }
 
     /* ==========================================================================
@@ -56,8 +59,8 @@
       --qrw-radius-lg: 16px;
       --qrw-radius-md: 10px;
       --qrw-radius-sm: 6px;
-      --qrw-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --qrw-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --qrw-font-sans: 'Lexend', sans-serif;
+      --qrw-font-mono: 'Lexend', sans-serif;
 
       all: initial;
       display: block;
