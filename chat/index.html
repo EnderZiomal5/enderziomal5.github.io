@@ -102,8 +102,14 @@ form.addEventListener("submit", (e) => {
   const text = input.value.trim();
   const name = usernameInput.value.trim() || "Anonymous";
   if (!text) return;
-  push(ref(db, `group_messages/${currentRoom}`), { name, text, timestamp: serverTimestamp() });
-  input.value = "";
+  
+  push(ref(db, `group_messages/${currentRoom}`), { name, text, timestamp: serverTimestamp() })
+    .then(() => {
+      input.value = "";
+    })
+    .catch((error) => {
+      alert("Firebase Error: " + error.message);
+    });
 });
 
 loadRoom(currentRoom);
