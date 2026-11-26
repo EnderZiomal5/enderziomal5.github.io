@@ -31,88 +31,17 @@ footer { text-align: center; padding: 25px; background: #1b0d25; color: #aa91b5;
 <header>
     <div class="logo">EnderChat</div>
 </header>
-<section id="chat-section">
-    <div class="chat-card">
-        <div class="chat-controls">
-            <select id="room-select">
-                <option value="general"># general</option>
-                <option value="gaming"># gaming</option>
-                <option value="dev"># development</option>
-            </select>
-            <input type="text" id="username" placeholder="Your Username..." required maxlength="15">
-        </div>
-        <div id="messages"></div>
-        <form id="chat-form">
-            <input type="text" id="chat-input" placeholder="Type a message..." required autocomplete="off">
-            <button type="submit">Send</button>
-        </form>
-    </div>
-</section>
-<footer>
+<h1>404</h1>
+<h3>This page is no longer supported and</h3>
+<h3> soon will be removed from the web </h3>
+<a href="https://enderziomal5.github.io"
+    <button> GO TO MAIN PAGE </button>
+</a>
+    
+    
+    <footer>
    © 2026 EnderZiomal5
 </footer>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB5SrbKunpKvpc86ZfFtIWcnUA4Fl6APLA",
-  authDomain: "enderchatez5.firebaseapp.com",
-  databaseURL: "https://enderchatez5-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "enderchatez5"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const select = document.getElementById("room-select");
-const messagesEl = document.getElementById("messages");
-const form = document.getElementById("chat-form");
-const input = document.getElementById("chat-input");
-const usernameInput = document.getElementById("username");
-
-let currentRoom = "general";
-let unsubscribeRoomListener = null;
-
-function loadRoom(room) {
-  if (unsubscribeRoomListener) {
-    unsubscribeRoomListener();
-  }
-  messagesEl.innerHTML = "";
-  const messagesQuery = query(ref(db, `group_messages/${room}`), limitToLast(40));
-  
-  unsubscribeRoomListener = onChildAdded(messagesQuery, (snap) => {
-    const data = snap.val();
-    const div = document.createElement("div");
-    const isMine = usernameInput.value && data.name === usernameInput.value.trim();
-    div.className = `msg ${isMine ? 'mine' : 'theirs'}`;
-    div.innerHTML = `<span class="msg-meta">${data.name}</span>${data.text}`;
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  });
-}
-
-select.addEventListener("change", (e) => {
-  currentRoom = e.target.value;
-  loadRoom(currentRoom);
-});
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const text = input.value.trim();
-  const name = usernameInput.value.trim() || "Anonymous";
-  if (!text) return;
-  
-  push(ref(db, `group_messages/${currentRoom}`), { name, text, timestamp: serverTimestamp() })
-    .then(() => {
-      input.value = "";
-    })
-    .catch((error) => {
-      alert("Firebase Error: " + error.message);
-    });
-});
-
-loadRoom(currentRoom);
-</script>
 </body>
 </html>
