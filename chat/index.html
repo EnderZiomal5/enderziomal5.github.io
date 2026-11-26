@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+<title>EnderChat</title>
+<style>
+* { box-sizing: border-box; scroll-behavior: smooth; }
+body { margin: 0; font-family: lexend, sans-serif; background: #100817; color: white; display: flex; flex-direction: column; min-height: 100vh; }
+header { padding: 18px 8%; display: flex; justify-content: space-between; align-items: center; background: #1b0d25; position: sticky; top: 0; z-index: 10; }
+.logo { color: #ff39c8; font-size: 22px; font-weight: bold; }
+#chat-section { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 10%; }
+.chat-card { background: #21112d; border: 1px solid #54245f; border-radius: 15px; padding: 25px; width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; }
+.chat-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+select, input { background: #100817; color: white; border: 1px solid #54245f; padding: 10px 15px; border-radius: 20px; font-family: inherit; font-size: 14px; outline: none; }
+select:focus, input:focus { border-color: #ff39c8; }
+#messages { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; border-bottom: 1px solid #54245f; }
+.msg { padding: 10px 14px; border-radius: 12px; max-width: 80%; font-size: 14px; line-height: 1.4; word-break: break-word; }
+.msg.mine { background: #ff39c8; color: white; align-self: flex-end; }
+.msg.theirs { background: #1b0d25; border: 1px solid #54245f; align-self: flex-start; }
+.msg-meta { font-size: 10px; color: #ff70d7; margin-bottom: 3px; display: block; }
+#chat-form { display: flex; gap: 10px; }
+#chat-input { flex: 1; }
+button { background: #ff39c8; border: none; padding: 10px 20px; border-radius: 20px; color: white; font-weight: bold; cursor: pointer; font-family: inherit; }
+button:hover { background: #d91ca8; }
+footer { text-align: center; padding: 25px; background: #1b0d25; color: #aa91b5; }
+</style>
+</head>
+<body>
+<header>
+    <div class="logo">EnderChat</div>
+</header>
+<section id="chat-section">
+    <div class="chat-card">
+        <div class="chat-controls">
+            <select id="room-select">
+                <option value="general"># general</option>
+                <option value="gaming"># gaming</option>
+                <option value="dev"># development</option>
+            </select>
+            <input type="text" id="username" placeholder="Your Username..." required maxlength="15">
+        </div>
+        <div id="messages"></div>
+        <form id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</section>
+<footer>
+   © 2026 EnderZiomal5
+</footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// Replace with your actual Firebase Project keys
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "enderchatez5.firebaseapp.com",
+  databaseURL: "https://enderchatez5-default-rtdb.firebaseio.com",
+  projectId: "enderchatez5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const select = document.getElementById("room-select");
+const messagesEl = document.getElementById("messages");
+const form = document.getElementById("chat-form");
+const input = document.getElementById("chat-input");
+const usernameInput = document.getElementById("username");
+
+let currentRoom = "general";
+
+function loadRoom(room) {
+  messagesEl.innerHTML = "";
+  const messagesQuery = query(ref(db, `group_messages/${room}`), limitToLast(40));
+  
+  onChildAdded(messagesQuery, (snap) => {
+    const data = snap.val();
+    const div = document.createElement("div");
+    const isMine = usernameInput.value && data.name === usernameInput.value.trim();
+    div.className = `msg ${isMine ? 'mine' : 'theirs'}`;
+    div.innerHTML = `<span class="msg-meta">${data.name}</span>${data.text}`;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  });
+}
+
+select.addEventListener("change", (e) => {
+  currentRoom = e.target.value;
+  loadRoom(currentRoom);
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  const name = usernameInput.value.trim() || "Anonymous";
+  if (!text) return;
+  push(ref(db, `group_messages/${currentRoom}`), { name, text, timestamp: serverTimestamp() });
+  input.value = "";
+});
+
+loadRoom(currentRoom);
+</script>
+</body>
+</html>
