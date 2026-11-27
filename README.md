@@ -24,7 +24,7 @@ Features
 
 Updates
 
-This website is continuously being developed and improved, with new features and pages added over time. You can check the Patch Notes for more information on patches and updates
+This website is continuously being developed and improved, with new features and pages added over time. You can check the Changelog & Patch Notes for more information on patches and updates.
 
 ---
 
